@@ -2,7 +2,8 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const graphqlHttp = require("express-graphql");
 const { buildSchema } = require("graphql");
-
+const mongoose = require("mongoose");
+require("dotenv").config();
 const app = express();
 
 const events = [];
@@ -63,4 +64,14 @@ app.use(
   })
 );
 
-app.listen(3000);
+mongoose
+  .connect(
+    `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-pbskw.mongodb.net/test?retryWrites=true&w=majority`
+  )
+  .then(() => {
+    app.listen(3000);
+    console.log("Listening on port 3000");
+  })
+  .catch(err => {
+    console.log(err);
+  });
